@@ -24,7 +24,7 @@ wm.connect()
 
 #show station data on display
 def visualize(station:dict, white=False):
-    if station == {}:
+    if station == {} or not station['isOpen']:
         display.poweroff()
         display.show()
         return
@@ -91,14 +91,14 @@ animToggle = True
 counter = 1
 while True:
     utime.sleep(2)
-    prepData()
     if(cheapest != {} and cheapest[sortKey()]<meanPrice*0.8):
         visualize(cheapest, animToggle)
         animToggle = not animToggle
     else:
         visualize(cheapest)
-    if counter % 300 == 0:
+    if counter == 300:
         getData()
+        prepData()
         counter = 0
     counter = counter+1
 
