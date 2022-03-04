@@ -88,7 +88,7 @@ animToggle = True
 counter = 1
 while True:
     utime.sleep(2)
-    if(cheapest != {} and cheapest[sortKey()]<meanPrice*0.8):
+    if(cheapest != {} and cheapest[sortKey()]<(meanPrice*0.975)):
         visualize(cheapest, animToggle)
         animToggle = not animToggle
     else:
