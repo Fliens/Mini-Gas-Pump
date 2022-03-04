@@ -25,24 +25,21 @@ wm.connect()
 #show station data on display
 def visualize(station:dict, white=False):
     if station == {} or not station['isOpen']:
-        display.poweroff()
+        display.fill(0)
         display.show()
         return
-    display.poweron()
-    color = 1
+    
     display.fill(0)
-    if white:
-        color = 0
-        display.fill(1)
-
     brand = station['brand']
-    display.text(brand,int((8-(len(brand)/2))*8) ,0,color)
-    display.text('Diesel:',0,8,color)
-    display.text(station['Diesel'],85,8,color)
-    display.text('E10:',0,16,color)
-    display.text(station['E10'],85,16,color)
-    display.text('Super:',0,24,color)
-    display.text(station['E5'],85,24,color)
+    display.text(brand,int((8-(len(brand)/2))*8) ,0,1)
+    display.text('Diesel:',0,8,1)
+    display.text(station['Diesel'],85,8,1)
+    display.text('E10:',0,16,1)
+    display.text(station['E10'],85,16,1)
+    display.text('Super:',0,24,1)
+    display.text(station['E5'],85,24,1)
+    if(white):
+        display.invert(1)
     display.show()
 
 #key for sorting results
@@ -101,4 +98,3 @@ while True:
         prepData()
         counter = 0
     counter = counter+1
-
