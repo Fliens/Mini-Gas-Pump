@@ -53,17 +53,23 @@ def sortKey():
 
 #data collecting
 rawStations = {}
-meanPrice = 1
+meanPrice = -1
 def getData():
     global meanPrice, rawStations
     print('collecting Data')
     
-    stationsresponse = urequests.get('https://creativecommons.tankerkoenig.de/json/list.php?lat='+str(lat)+'&lng='+str(lng)+'&rad='+str(radius)+'&sort=dist&type=all&apikey='+key).json()
-    rawStations = stationsresponse['stations']
+    try:
+        stationsresponse = urequests.get('https://creativecommons.tankerkoenig.de/json/list.php?lat='+str(lat)+'&lng='+str(lng)+'&rad='+str(radius)+'&sort=dist&type=all&apikey='+key).json()
+        rawStations = stationsresponse['stations']
+    except:
+        pass
     
     #gather meanPrice
-    meanresponse = urequests.get('https://creativecommons.tankerkoenig.de/api/v4/stats?apikey='+key).json()
-    meanPrice = meanresponse[sortKey()]['mean']
+    try:
+        meanresponse = urequests.get('https://creativecommons.tankerkoenig.de/api/v4/stats?apikey='+key).json()
+        meanPrice = meanresponse[sortKey()]['mean']
+    except:
+        pass
 
 cheapest = {}
 def prepData():
@@ -95,7 +101,8 @@ while True:
         visualize(cheapest, animToggle)
         animToggle = not animToggle
     else:
-        visualize(cheapest)
+        visualize(cheapest)  
+    
     if counter == 300:
         getData()
         prepData()
