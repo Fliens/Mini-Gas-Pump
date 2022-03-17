@@ -8,7 +8,8 @@ lat =               #set your latitute
 lng =               #set your longitude
 radius = 3          #needs to be adjusted if memory error or no stations close enough
 key = ''            #insert api key
-difference = 0.04   #difference between mean and current price to blink in dec percentage
+difference = 0.04#difference between mean and current price to blink in dec percentage
+refreshTime = 10#minutes after which new data is requested 
 
 #display
 i2c = SoftI2C(scl=Pin(5), sda=Pin(4))
@@ -58,7 +59,7 @@ def prepData():
     if rawStations == {}:
         return
     stations = {}
-    for station in rawStations[:5]: #reducing to 5 stations and cleaining data
+    for station in rawStations[:5]:#reducing to 5 stations and cleaining data
         if station['brand'] not in stations:
             stations[station['brand']] = {'brand':station['brand'],'isOpen':station['isOpen'],'E5':station['e5'],'E10':station['e10'],'Diesel':station['diesel']}
     #finding cheapest station
@@ -93,9 +94,11 @@ def visualize(station:dict, white=False):
     display.text('Super:',0,24,color)
     display.text(station['E5'],85,24,color)
        
-    if meanPrice != -1: #underline if meanPrice is active
+    if meanPrice != -1:#underline if meanPrice is active
         for x in range((len(brand)*8)):
             display.pixel(shift + x,7,color)
+
+    display.text(int(refreshTime - counter/30),117,0,color)
     
     display.show()
 
@@ -107,13 +110,13 @@ prepData()
 animToggle = True
 while True:
     utime.sleep(2)
-    if(cheapest != {} and cheapest[sortKey()]<(meanPrice*(1-difference)):
+    if cheapest != {} and cheapest[sortKey()]<(meanPrice*(1-difference)):
         visualize(cheapest, animToggle)
         animToggle = not animToggle
     else:
         visualize(cheapest)  
     
-    if counter == 300:
+    if counter == (refreshTime*60)/2:
         getData()
         prepData()
         counter = 0
